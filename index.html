@@ -1,9 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>测试</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黑客炫酷界面</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: "Courier New", Courier, monospace;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+        }
+        .text-flow {
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid #0f0;
+            animation: typing 10s steps(100, end), blink-caret 0.75s step-end infinite;
+            display: inline-block;
+        }
+        .video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+        @keyframes blink-caret {
+            from,
+            to {
+                border-color: transparent;
+            }
+            50% {
+                border-color: #0f0;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>兄弟们！都鸡巴是割门，谁割不是割，不如让我割，割的开心割的快乐</h1>
+    <div class="container">
+        <div class="text-flow" id="colorfulText"></div>
+        <div class="video-container" id="farmVideoContainer">
+            <video id="farmVideo" width="640" height="360" muted>
+                <source src="https://www.bilibili.com/video/BV1PRThzaEGd/index.m3u8" type="application/x-mpegURL">
+                你的浏览器不支持视频播放
+            </video>
+        </div>
+        <div class="video-container" id="hackerVideoContainer">
+            <video id="hackerVideo" width="640" height="360" muted>
+                <source src="https://www.bilibili.com/video/BV1gT411u7ym/index.m3u8" type="application/x-mpegURL">
+                你的浏览器不支持视频播放
+            </video>
+        </div>
+    </div>
+    <script>
+        const text = "兄弟们！都鸡巴是割门，谁割不是割，不如让我割，割的开心割的快乐，愿各位身如泰山，体魄强健，风雨不侵；万事胜意，谋事必成，所向皆坦途；笑口常开，心若朝阳，能量满格；财源如江海奔腾，富可敌国，机遇抓到手软！这波祝福，霸气全开，给你满分运势，咱们一起炸翻全场！";
+        const colors = ["#00ff00", "#00ffff", "#ff00ff", "#ffff00", "#ff0000", "#00ff80", "#8000ff"];
+        const colorfulTextElement = document.getElementById("colorfulText");
+        let currentIndex = 0;
+        function typeText() {
+            if (currentIndex < text.length) {
+                const char = text.charAt(currentIndex);
+                const color = colors[currentIndex % colors.length];
+                const span = document.createElement("span");
+                span.style.color = color;
+                span.textContent = char;
+                colorfulTextElement.appendChild(span);
+                currentIndex++;
+                setTimeout(typeText, 100);
+            } else {
+                setTimeout(startVideos, 3000);
+            }
+        }
+        function startVideos() {
+            const farmVideo = document.getElementById('farmVideo');
+            const hackerVideo = document.getElementById('hackerVideo');
+            const farmVideoContainer = document.getElementById('farmVideoContainer');
+            const hackerVideoContainer = document.getElementById('hackerVideoContainer');
+            farmVideo.muted = false;
+            hackerVideo.muted = false;
+            farmVideoContainer.style.opacity = '1';
+            farmVideo.play();
+            farmVideo.addEventListener('ended', () => {
+                farmVideoContainer.style.opacity = '0';
+                hackerVideoContainer.style.opacity = '1';
+                hackerVideo.play();
+            });
+            function requestFullScreen(element) {
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if (element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                } else if (element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                }
+            }
+            farmVideo.addEventListener('play', () => {
+                requestFullScreen(farmVideo);
+            });
+            hackerVideo.addEventListener('play', () => {
+                requestFullScreen(hackerVideo);
+            });
+        }
+        typeText();
+    </script>
 </body>
 </html>
